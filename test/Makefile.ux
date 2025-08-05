@@ -1,0 +1,21 @@
+SRCDIR=../
+CC=clang++
+CFLAGS=--std c++11 -I$(SRCDIR) -I$(SRCDIR)test -I$(SRCDIR)Basics/3rdParty -DTUVOK_NO_QT
+LIBS=libTuvokExpressions.so libTuvok.so
+XLIBS=-L/usr/X11R6/lib -L/opt/graphics/OpenGL/lib -lGLEW -lGL -lXext -lX11 -lpthread -lm
+OBJS=context.o glx-context.o render.o
+
+.PHONY: all
+all: render
+
+render: $(OBJS)
+	$(CC) -o render -Wl,-rpath=. $(OBJS) $(LIBS) $(XLIBS)
+
+context.o:	$(SRCDIR)test/context.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+
+glx-context.o:	$(SRCDIR)test/glx-context.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+
+render.o:	$(SRCDIR)test/render/render.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
